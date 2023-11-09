@@ -1,5 +1,5 @@
 # R_for_Data_Science
-This repository contains my practice of exploring a coffee dataset and creating visualizations using R to answer questions.
+This repository contains my practice of exploring a coffee dataset and creating visualizations using R.
 
 ## Introduction
 
