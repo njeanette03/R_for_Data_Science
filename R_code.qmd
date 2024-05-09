@@ -1,5 +1,4 @@
 ---
-title: "STAT650_midterm"
 author: "Jeanette Nguyen"
 format: 
   html:
