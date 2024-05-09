@@ -1,5 +1,4 @@
 ---
-title: "stat650_project_R"
 author: "Jeanette Nguyen"
 format: 
   html:
