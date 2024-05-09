@@ -1,0 +1,163 @@
+---
+title: "stat650_project_R"
+author: "Jeanette Nguyen"
+format: 
+  html:
+    self-contained: true
+---
+
+```{r}
+#install.packages("tidytuesdayR") 
+#library(tidytuesdayR) 
+#tt_available()
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(readr)
+```
+
+
+```{r}
+#load the dataset 
+coffee_ratings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-07/coffee_ratings.csv')
+```
+```{r}
+# check dimension
+dim(coffee_ratings)
+```
+
+```{r}
+# preview data
+head(coffee_ratings)
+```
+
+```{r}
+# filter data to include only columns of interest
+df1 <- select(coffee_ratings, species, country_of_origin, altitude_mean_meters, processing_method, total_cup_points, aroma, flavor, aftertaste, acidity, body, balance, uniformity, clean_cup, sweetness, cupper_points)
+```
+
+```{r}
+# omit rows with NA values
+df2 <- na.omit(df1)
+df2
+```
+```{r}
+# summary statistics
+summary(df2) 
+```
+
+```{r}
+# count of species
+table(df2$species)
+```
+
+```{r}
+# count
+table(df2$country_of_origin)
+```
+
+
+
+```{r}
+# compute number of countries and mean total cup score
+
+df2 |> group_by(country_of_origin) |> 
+  summarize(
+    count = n(),
+    total_cup_points = mean(total_cup_points)
+  ) |> 
+  filter(count > 15) |>
+  arrange(desc(total_cup_points))
+```
+
+```{r}
+# compute count of countries and arrange by desc
+ggplot(df2, aes(x = fct_rev(fct_infreq(country_of_origin)))) + 
+  geom_bar() + 
+  xlab("Country of Origin") +
+  coord_flip()
+
+```
+
+```{r}
+table(df2$processing_method)
+
+```
+```{r}
+# compute top 3 countries processing method
+
+# ethiopia
+df2 |> 
+  select(processing_method, country_of_origin) |>
+  filter(country_of_origin == "Ethiopia") |>
+  group_by(processing_method) |>
+  summarize(
+    count = n(),
+  )
+```
+```{r}
+# kenya
+df2 |> 
+  select(processing_method, country_of_origin) |>
+  filter(country_of_origin == "Kenya") |>
+  group_by(processing_method) |>
+  summarize(
+    count = n(),
+  )
+
+```
+
+```{r}
+# uganda 
+df2 |> 
+  select(processing_method, country_of_origin) |>
+  filter(country_of_origin == "Uganda") |>
+  group_by(processing_method) |>
+  summarize(
+    count = n(),
+  )
+```
+
+```{r}
+
+#compute top 3 countries mean, altitude, and grades
+
+df2 |> 
+  select(country_of_origin, altitude_mean_meters, aroma, flavor, aftertaste, acidity, body, balance, uniformity, clean_cup, sweetness, cupper_points) |>
+  filter(country_of_origin == "Ethiopia" | country_of_origin == "Uganda"| country_of_origin == "Kenya") |>
+  group_by(country_of_origin) |>
+  summarize(
+    altitude = mean(altitude_mean_meters),
+    aroma = mean(aroma),
+    flavor = mean(flavor),
+    aftertaste = mean(aftertaste),
+    acidity = mean(acidity),
+    body = mean(body),
+    balance = mean(balance),
+    uniformity = mean(uniformity),
+    clean_cup = mean(clean_cup),
+    sweetness = mean(sweetness),
+    cupper_points = mean(cupper_points) ) 
+
+```
+
+```{r}
+# uganda
+df2 |> 
+  select(processing_method, country_of_origin) |>
+  filter(country_of_origin == "Uganda") |>
+  group_by(processing_method) |>
+  summarize(
+    count = n(),
+  )
+```
+
+```{r}
+df2 |> 
+  select(country_of_origin, altitude_mean_meters) |>
+  group_by(country_of_origin) |>
+  summarize(
+    altitude = mean(altitude_mean_meters)) |>
+  arrange(desc(altitude))
+```
+
